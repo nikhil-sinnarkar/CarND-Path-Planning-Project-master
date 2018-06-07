@@ -16,7 +16,8 @@ The code compiles with `cmake` and `make` without errors.
 ![pathplanning](https://github.com/nikhil-sinnarkar/CarND-Path-Planning-Project-master/blob/master/pathplanning.jpg)
 
 #### Reflection
-
+In this project we need to define a path made up of (x,y) points that the car will visit sequentially every .02 seconds.
+The simulator returns us the previous path which the car was following. This may be empty if we have just started or the car has fully executed the path. In case it is not empty we use this to build our path in continuation of the previous path in order to avoid sudden changes in our heading or speed. This is implemented in [main.cpp](https://github.com/nikhil-sinnarkar/CarND-Path-Planning-Project-master/blob/master/src/main.cpp) from line 388 to 418
 
 ---  
 ### Simulator.
