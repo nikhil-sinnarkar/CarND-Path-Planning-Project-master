@@ -1,6 +1,22 @@
 # CarND-Path-Planning-Project
 Self-Driving Car Engineer Nanodegree Program
-   
+
+### Rubric
+#### Compilation
+The code compiles with `cmake` and `make` without errors.
+
+#### Valid Trajectories
+* The car is able to drive at least 4.32 miles without incident.
+* The car drives according to the speed limit.
+* Max Acceleration and Jerk are not Exceeded.
+* Car does not have collisions.
+* The car stays in its lane, except for the time between changing lanes.
+* The car is able to change lanes smoothly.
+
+#### Reflection
+
+
+---  
 ### Simulator.
 You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases/tag/T3_v1.2).
 
