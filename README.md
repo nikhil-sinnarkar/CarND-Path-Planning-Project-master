@@ -53,7 +53,8 @@ if (d < (2 + 4 * lane + 2) && d > (2 + 4 * lane - 2))
 		front_car_speed = check_speed;
 	}
 }
-
+```
+```
 //car in left lane
 else if ((lane != 0) && (d < (2 + 4 * (lane - 1) + 2) && d > (2 + 4 * (lane - 1) - 2)))
 {
@@ -71,7 +72,8 @@ else if ((lane != 0) && (d < (2 + 4 * (lane - 1) + 2) && d > (2 + 4 * (lane - 1)
 		// cout << "car detected on left" << endl;
 	}
 }
-
+```
+```
 //car in right lane
 else if ((lane != 2) && (d < (2 + 4 * (lane + 1) + 2) && d > (2 + 4 * (lane + 1) - 2)))
 {
