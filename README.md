@@ -37,6 +37,65 @@ for (int i = 0; i < ptsx.size(); i++)
 }
 ```
 Then we fit a spline onto these points and convert the points that are lying on the spline as the points the car should follow.
+We create an array of x and y points that we will pass to the planner. We append the points from our previous path to it and then fill the remaining array with points from the spline so it has a total of 50 points.
+
+#### Lane change logic
+First we scan through list of all the cars picked up by our sensors. In this list we first check if the car is in front of us (within 30 meters). If it is then we set a flag, if not then we proceed further. If the car is not in our lane then we check if it is in our right lane or left lane within a specific range. If the car is in our right or left lane and it is either 30m ahead of us or 10m behind then we should not move to that lane. Hence if this condition is detected I set the flag `car_in_left` or `car_in_right` to `true`. Also I calculate the speed of the cars which are in front of us either in our lane or right/left lane. After we have iterated through all the cars in the list we have the information if there is a car in front of us or in our left/right lane and close to us.
+```
+//car is in my lane
+if (d < (2 + 4 * lane + 2) && d > (2 + 4 * lane - 2))
+{
+	check_car_s += (double)(prev_size * 0.02 * check_speed); // if using previous points can project s value out
+	// check s value greater than mine and s gap
+	if ((check_car_s > car_s) && ((check_car_s - car_s) < 30))
+	{
+		too_close = true;
+		front_car_speed = check_speed;
+	}
+}
+
+//car in left lane
+else if ((lane != 0) && (d < (2 + 4 * (lane - 1) + 2) && d > (2 + 4 * (lane - 1) - 2)))
+{
+	double curr_check_car_s = check_car_s;
+	check_car_s += (double)(prev_size * 0.02 * check_speed);
+	if ((check_car_s > car_s) && ((check_car_s - car_s) < 30))
+	{
+		car_in_left = true;
+		left_car_speed = check_speed;
+		// cout << "car detected on left front" << endl;
+	}
+	else if (abs(car_s - check_car_s) < 10)
+	{
+		car_in_left = true;
+		// cout << "car detected on left" << endl;
+	}
+}
+
+//car in right lane
+else if ((lane != 2) && (d < (2 + 4 * (lane + 1) + 2) && d > (2 + 4 * (lane + 1) - 2)))
+{
+	double curr_check_car_s = check_car_s;
+	check_car_s += (double)(prev_size * 0.02 * check_speed);
+	if ((check_car_s > car_s) && ((check_car_s - car_s) < 30))
+	{
+		car_in_right = true;
+		right_car_speed = check_speed;
+		// cout << "car detected on right front" << endl;
+	}
+	else if (abs(car_s - check_car_s) < 10)
+	{
+		car_in_right = true;
+		// cout << "car detected on right" << endl;
+	}
+}
+```
+
+Now we make the decision of changing the lanes based on the flags we have set and the speed of the cars in front of us. If we find a car in front of us then we check either left or right or both the lanes (depending on which lane are we driving currently) for free space. If we find a free lane then we make a turn to that lane. In case we are in center lane and both the right and left lanes sre free then left lane is preffered. 
+
+Next case is that we have a car in front of us and a car in next lane also. In this case we first check the speed of both the cars and turn to the lane which has the car with higher speed. If the car in front of us has a higher speed then the car in the next lane then we won't change our lane.
+
+
 
 ---  
 ### Simulator.
