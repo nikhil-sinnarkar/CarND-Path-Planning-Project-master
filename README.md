@@ -21,21 +21,20 @@ The simulator returns us the previous path which the car was following. This may
 
 After this we add evenly 30m spaced points ahead of the starting reference in frenet coordiante.
 ```
-     vector<double> next_wp0 = getXY(car_s + 30, (2 + 4 * lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
-				 vector<double> next_wp1 = getXY(car_s + 60, (2 + 4 * lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
-					vector<double> next_wp2 = getXY(car_s + 90, (2 + 4 * lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
+	vector<double> next_wp0 = getXY(car_s + 30, (2 + 4 * lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
+	vector<double> next_wp1 = getXY(car_s + 60, (2 + 4 * lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
+	vector<double> next_wp2 = getXY(car_s + 90, (2 + 4 * lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
 ```
 We add these points to the list of x and y points. After this we transform the coordinates such that our car is at (0,0) with a heading of 0 degrees. 
 ```
-     for (int i = 0; i < ptsx.size(); i++)
-					{
-						  //shift the c ar reference angle to 0 degrees
-						  double shift_x = ptsx[i] - ref_x;
-						  double shift_y = ptsy[i] - ref_y;
-
-						  ptsx[i] = (shift_x * cos(0 - ref_yaw) - shift_y * sin(0 - ref_yaw));
-						  ptsy[i] = (shift_x * sin(0 - ref_yaw) + shift_y * cos(0 - ref_yaw));
-					}
+	for (int i = 0; i < ptsx.size(); i++)
+	{
+		  //shift the c ar reference angle to 0 degrees
+		  double shift_x = ptsx[i] - ref_x;
+		  double shift_y = ptsy[i] - ref_y;
+		  ptsx[i] = (shift_x * cos(0 - ref_yaw) - shift_y * sin(0 - ref_yaw));
+		  ptsy[i] = (shift_x * sin(0 - ref_yaw) + shift_y * cos(0 - ref_yaw));
+	}
 ```
 Then we fit a spline onto these points and convert the points that are lying on the spline as the points the car should follow.
 
