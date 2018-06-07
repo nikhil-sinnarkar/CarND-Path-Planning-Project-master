@@ -17,11 +17,31 @@ The code compiles with `cmake` and `make` without errors.
 
 #### Reflection
 In this project we need to define a path made up of (x,y) points that the car will visit sequentially every .02 seconds.
-The simulator returns us the previous path which the car was following. This may be empty if we have just started or the car has fully executed the path. In case it is not empty we use this to build our path in continuation of the previous path in order to avoid sudden changes in our heading or speed. This is implemented in [main.cpp](https://github.com/nikhil-sinnarkar/CarND-Path-Planning-Project-master/blob/master/src/main.cpp) from line 388 to 418
+The simulator returns us the previous path which the car was following. This may be empty if we have just started or the car has fully executed the path. In case it is not empty we use this to build our path in continuation of the previous path in order to avoid sudden changes in our heading or speed. This is implemented in [main.cpp](https://github.com/nikhil-sinnarkar/CarND-Path-Planning-Project-master/blob/master/src/main.cpp) from line 388 to 418.
+
+After this we add evenly 30m spaced points ahead of the starting reference in frenet coordiante.
+```
+     vector<double> next_wp0 = getXY(car_s + 30, (2 + 4 * lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
+				 vector<double> next_wp1 = getXY(car_s + 60, (2 + 4 * lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
+					vector<double> next_wp2 = getXY(car_s + 90, (2 + 4 * lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
+```
+We add these points to the list of x and y points. After this we transform the coordinates such that our car is at (0,0) with a heading of 0 degrees. 
+```
+     for (int i = 0; i < ptsx.size(); i++)
+					{
+						  //shift the c ar reference angle to 0 degrees
+						  double shift_x = ptsx[i] - ref_x;
+						  double shift_y = ptsy[i] - ref_y;
+
+						  ptsx[i] = (shift_x * cos(0 - ref_yaw) - shift_y * sin(0 - ref_yaw));
+						  ptsy[i] = (shift_x * sin(0 - ref_yaw) + shift_y * cos(0 - ref_yaw));
+					}
+```
+Then we fit a spline onto these points and convert the points that are lying on the spline as the points the car should follow.
 
 ---  
 ### Simulator.
-You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases/tag/T3_v1.2).
+You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab](https://github.com/udacity/self-driving-car-sim/releases/tag/T3_v1.2).
 
 ### Goals
 In this project your goal is to safely navigate around a virtual highway with other traffic that is driving +-10 MPH of the 50 MPH speed limit. You will be provided the car's localization and sensor fusion data, there is also a sparse map list of waypoints around the highway. The car should try to go as close as possible to the 50 MPH speed limit, which means passing slower traffic when possible, note that other cars will try to change lanes too. The car should avoid hitting other cars at all cost as well as driving inside of the marked road lanes at all times, unless going from one lane to another. The car should be able to make one complete loop around the 6946m highway. Since the car is trying to go 50 MPH, it should take a little over 5 minutes to complete 1 loop. Also the car should not experience total acceleration over 10 m/s^2 and jerk that is greater than 10 m/s^3.
