@@ -13,6 +13,8 @@ The code compiles with `cmake` and `make` without errors.
 * The car stays in its lane, except for the time between changing lanes.
 * The car is able to change lanes smoothly.
 
+[pathplanning](https://github.com/nikhil-sinnarkar/CarND-Path-Planning-Project-master/blob/master/pathplanning.jpg)
+
 #### Reflection
 
 
